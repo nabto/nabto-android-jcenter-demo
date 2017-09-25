@@ -35,10 +35,11 @@ public class MainActivity extends AppCompatActivity {
                 // handle error
             }
 
+            String version = api.versionString();
             result = api.rpcInvoke("nabto://demo.nabto.net/wind_speed.json?", session);
             if (result.getStatus() == NabtoStatus.OK) {
                 Log.v("demo", result.getJson());
-                ((TextView) findViewById(R.id.textView)).setText(result.getJson());
+                ((TextView) findViewById(R.id.textView)).setText(version + ":\n" + result.getJson());
             }
 
             api.closeSession(session);

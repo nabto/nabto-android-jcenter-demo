@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     static final private String certUser = "johndoe";
     static final private String certPassword = "notsosecret";
     static final private String rpcUrl = "nabto://demo.nabto.net/wind_speed.json?";
-    static final private String tunnelHost = "www.google.com";
+    static final private String tunnelHost = "streamdemo.nabto.net";
 
     private void rpc() {
     }

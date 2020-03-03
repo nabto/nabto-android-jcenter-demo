@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     static final private String certUser = "johndoe";
     static final private String certPassword = "notsosecret";
     static final private String rpcUrl = "nabto://demo.nabto.net/wind_speed.json?";
-    static final private String tunnelHost = "streamdemo.nabto.net";
+    static final private String tunnelHost = "www.google.com";
 
     private void rpc() {
     }
@@ -79,6 +79,11 @@ public class MainActivity extends AppCompatActivity {
         appendText("Nabto client SDK successfully initialized, version " + api.versionString());
     }
 
+    private void stop() {
+        NabtoStatus status = api.closeSession(session);
+        appendText("Close session returned " + status);
+    }
+
     private void demoRpc() {
         RpcResult result = api.rpcSetDefaultInterface(INTERFACE_XML, session);
         if (result.getStatus() == NabtoStatus.OK) {
@@ -98,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
         appendText("Opening tunnel ...");
         startProgress();
         new TunnelTask().execute();
-
     }
 
     private class TunnelTask extends AsyncTask<Void, Void, TunnelInfoResult> {
@@ -113,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                     performHttpRequest(result.getPort());
                 }
             } else {
-                appendText("Nabto tunnel open attempt failed, state is [" + result.getTunnelState() + "], last error was " + result.getLastError());
+                appendText("Nabto tunnel open attempt failed with status " + result.getStatus());
             }
         }
 
@@ -142,14 +146,6 @@ public class MainActivity extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
-    public void initClicked(View view) {
-        try {
-            init();
-        } catch (Exception e) {
-            appendText("ERROR: " + e.getMessage());
-        }
-    }
-
     private class RpcTask extends AsyncTask<Void, Void, RpcResult> {
 
         protected void onPostExecute(RpcResult result) {
@@ -169,14 +165,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void initClicked(View view) {
+        try {
+            init();
+        } catch (Exception e) {
+            appendText("ERROR: " + e.getMessage());
+        }
+    }
+
     public void rpcClicked(View view) {
-        demoRpc();
+        if (this.api != null) {
+            demoRpc();
+        } else {
+            appendText("Not initialized yet!");
+        }
     }
 
     public void tunnelClicked(View view) {
-        demoTunnel();
+        if (this.api != null) {
+            demoTunnel();
+        } else {
+            appendText("Not initialized yet!");
+        }
     }
 
+    public void stopClicked(View view) {
+        if (this.api != null) {
+            stop();
+        } else {
+            appendText("Not initialized yet!");
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
